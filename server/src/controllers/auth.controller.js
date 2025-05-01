@@ -1,3 +1,5 @@
+import { User } from "../models/user";
+
 export const signup = async (req, res) => {
   res.send("signup");
 };
