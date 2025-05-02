@@ -146,3 +146,5 @@ export const logout = async (req, res) => {
     });
   }
 };
+
+export const onboard = async () => {};
