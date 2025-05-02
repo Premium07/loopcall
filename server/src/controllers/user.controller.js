@@ -94,3 +94,47 @@ export const sendFriendRequest = async (req, res) => {
     });
   }
 };
+
+export const acceptFriendRequest = async (req, res) => {
+  try {
+    const { id: requestId } = req.params;
+    const friendRequest = await FriendRequest.findById(requestId);
+
+    if (!friendRequest) {
+      return res.status(400).json({
+        message: "Friend request not found",
+      });
+    }
+
+    // verify if the current user is the recipent of the friend request
+    if (friendRequest.recipient.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Unauthorized to accept the friend request",
+      });
+    }
+
+    friendRequest.status = "accepted";
+    await friendRequest.save();
+
+    // add the sender and recipient to each other's friend list
+
+    // $addToSet is used to add an element to an array only if it is not already present
+    await User.findByIdAndUpdate(friendRequest.sender, {
+      $addToSet: { friends: friendRequest.recipient },
+    });
+
+    await User.findByIdAndUpdate(friendRequest.recipient, {
+      $addToSet: { friends: friendRequest.sender },
+    });
+
+    return res.status(200).json({
+      message: "Friend request accepted",
+      friendRequest,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
