@@ -138,3 +138,45 @@ export const acceptFriendRequest = async (req, res) => {
     });
   }
 };
+
+export const getFriendRequests = async (req, res) => {
+  try {
+    const incomingReq = await FriendRequest.find({
+      recipient: req.user.id,
+      status: "pending",
+    }).populate(
+      "sender",
+      "fullName profilePic nativeLanguage learningLanguage"
+    );
+
+    const acceptedReq = await FriendRequest.find({
+      recipient: req.user.id,
+      status: "accepted",
+    }).populate("recipient", "fullName profilePic");
+
+    return res.status(200).json(incomingReq);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
+
+export const getOutgoingFriendRequests = async (req, res) => {
+  try {
+    const outGoingReq = await FriendRequest.find({
+      sender: req.user.id,
+      status: "pending",
+    }).populate(
+      "recipient",
+      "fullName profilePic nativeLanguage learningLanguage"
+    );
+
+    return res.status(200).json(outGoingReq);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
