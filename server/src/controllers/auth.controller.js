@@ -1,5 +1,6 @@
 import { User } from "../models/user.js";
 import jwt from "jsonwebtoken";
+import { upsertStreamUser } from "../lib/stream.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -37,12 +38,18 @@ export const signup = async (req, res) => {
     const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
-    const user = await new User({
+    const user = await User.create({
       fullName,
       email,
       password,
       profilePic: randomAvatar,
-    }).save();
+    });
+
+    await upsertStreamUser({
+      id: user._id.toString(),
+      name: user.fullName,
+      image: user.profilePic || "",
+    });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
