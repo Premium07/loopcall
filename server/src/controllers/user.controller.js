@@ -39,3 +39,5 @@ export const getMyFriends = async (req, res) => {
     });
   }
 };
+
+export const sendFriendRequest = async (req, res) => {};
