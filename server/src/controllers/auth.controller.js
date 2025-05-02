@@ -147,4 +147,72 @@ export const logout = async (req, res) => {
   }
 };
 
-export const onboard = async () => {};
+export const onboard = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { fullName, bio, nativeLanguage, learningLanguage, location } =
+      req.body;
+
+    if (
+      !fullName ||
+      !bio ||
+      !nativeLanguage ||
+      !learningLanguage ||
+      !location
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter all fields",
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...req.body,
+        onBoarding: true,
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    await upsertStreamUser({
+      id: user._id.toString(),
+      name: user.fullName,
+      image: user.profilePic || "",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "User onboarded",
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
+
+export const profile = async (req, res) => {
+  try {
+    const user = req.user;
+    return res.status(200).json({
+      success: true,
+      message: "User profile",
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
