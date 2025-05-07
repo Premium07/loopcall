@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
 import { Eye, EyeOff, Video } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { signup } from "../lib/api";
+import { useSignup } from "../hooks/useSignup";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -13,15 +11,7 @@ const SignUpPage = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const { isPending, mutate, error } = useMutation({
-    mutationFn: signup,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      toast.success("Account created");
-    },
-  });
+  const { isPending, mutate, error } = useSignup();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

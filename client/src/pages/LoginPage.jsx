@@ -1,9 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff, Video } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { login } from "../lib/api";
-import toast from "react-hot-toast";
+import { useLogin } from "../hooks/useLogin";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -12,15 +10,7 @@ const LoginPage = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const { isPending, mutate, error } = useMutation({
-    mutationFn: login,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      toast.success("login successfull");
-    },
-  });
+  const { mutate, isPending, error } = useLogin();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
