@@ -7,24 +7,13 @@ import NotificationsPage from "./pages/NotificationsPage";
 import ChatPage from "./pages/ChatPage";
 import CallPage from "./pages/CallPage";
 import { Toaster } from "react-hot-toast";
-import { useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "./lib/axios";
+import PageLoader from "./components/PageLoader";
+import useAuthUser from "./hooks/useAuthUser";
 
 const App = () => {
-  const {
-    data: authData,
-    // isLoading,
-    // error,
-  } = useQuery({
-    queryKey: ["authUser"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/auth/profile");
-      return res.data;
-    },
-    retry: false,
-  });
+  const { isLoading, authUser } = useAuthUser();
 
-  const authUser = authData?.user;
+  if (isLoading) return <PageLoader />;
 
   return (
     <main className="h-screen">
