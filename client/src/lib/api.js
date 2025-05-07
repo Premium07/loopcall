@@ -5,6 +5,11 @@ export const signup = async (formData) => {
   return res.data;
 };
 
+export const login = async (formData) => {
+  const res = await axiosInstance.post("/auth/login", formData);
+  return res.data;
+};
+
 export const getAuthUser = async () => {
   const res = await axiosInstance.get("/auth/profile");
   return res.data;
