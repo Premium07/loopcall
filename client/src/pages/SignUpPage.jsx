@@ -23,6 +23,11 @@ const SignUpPage = () => {
     },
   });
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   const handleSignup = (e) => {
     e.preventDefault();
     mutate(formData);
@@ -70,9 +75,8 @@ const SignUpPage = () => {
                       placeholder="John Doe"
                       className="input input-bordered w-full mt-2"
                       value={formData.fullName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, fullName: e.target.value })
-                      }
+                      name="fullName"
+                      onChange={(e) => handleInputChange(e)}
                       required
                     />
                   </div>
@@ -85,9 +89,8 @@ const SignUpPage = () => {
                       placeholder="user@example.com"
                       className="input input-bordered w-full mt-2"
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
+                      name="email"
+                      onChange={(e) => handleInputChange(e)}
                       required
                     />
                   </div>
@@ -100,9 +103,8 @@ const SignUpPage = () => {
                       placeholder="********"
                       className="input input-bordered w-full mt-2 "
                       value={formData.password}
-                      onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                      }
+                      name="password"
+                      onChange={(e) => handleInputChange(e)}
                       required
                     />
                     <button
