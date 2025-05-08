@@ -11,9 +11,13 @@ import PageLoader from "./components/PageLoader";
 import useAuthUser from "./hooks/useAuthUser";
 import OnBoardingPage from "./pages/OnBoardingPage";
 import Layout from "./components/Layout";
+import { useThemeStore } from "./store/useThemeStore";
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
+
+  const { theme } = useThemeStore();
+
 
   const isAuthenticated = Boolean(authUser);
   const isOnboarded = authUser?.onBoarding;
@@ -21,7 +25,7 @@ const App = () => {
   if (isLoading) return <PageLoader />;
 
   return (
-    <section className="h-screen" data-theme="night">
+    <section className="h-screen" data-theme={theme}>
       <Routes>
         <Route
           path="/"
