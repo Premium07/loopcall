@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader";
 import useAuthUser from "./hooks/useAuthUser";
 import OnBoardingPage from "./pages/OnBoardingPage";
+import Layout from "./components/Layout";
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
@@ -20,13 +21,15 @@ const App = () => {
   if (isLoading) return <PageLoader />;
 
   return (
-    <main className="h-screen" data-theme="night">
+    <section className="h-screen" data-theme="night">
       <Routes>
         <Route
           path="/"
           element={
             isAuthenticated && isOnboarded ? (
-              <HomePage />
+              <Layout showSidebar>
+                <HomePage />
+              </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
@@ -82,7 +85,7 @@ const App = () => {
         />
       </Routes>
       <Toaster toastOptions={{ position: "top-right" }} />
-    </main>
+    </section>
   );
 };
 
